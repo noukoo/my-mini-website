@@ -23,4 +23,10 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-mini-website:latest
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deployment on Render
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
