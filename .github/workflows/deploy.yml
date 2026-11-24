@@ -22,4 +22,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-first-devops-project:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-mini-website:latest
+
