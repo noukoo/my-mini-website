@@ -24,8 +24,8 @@ jobs:
         run: curl --fail http://localhost:8080
   
       - name: Check the page has the expected text
-        run: curl -s http://localhost:8080 | grep "Welcome to my mini website"
-
+        run: curl -s http://localhost:8080 | grep "test for mpimpiki"
+        
   build-and-push:
     needs: test
     runs-on: ubuntu-latest
