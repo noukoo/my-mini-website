@@ -5,7 +5,29 @@ on:
     branches: [main]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+  
+      - name: Build the image
+        run: docker build -t test-image .
+  
+      - name: Run the container
+        run: docker run -d -p 8080:80 --name test-container test-image
+  
+      - name: Wait for the server to start
+        run: sleep 3
+  
+      - name: Check the page responds
+        run: curl --fail http://localhost:8080
+  
+      - name: Check the page has the expected text
+        run: curl -s http://localhost:8080 | grep "Welcome to my mini website"
+
   build-and-push:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get the code
@@ -22,7 +44,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/my-mini-website:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/my-mini-website:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/my-mini-website:${{ github.sha }}
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
